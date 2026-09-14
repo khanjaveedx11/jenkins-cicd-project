@@ -207,4 +207,4 @@ marimo/_lsp/
 __marimo__/
 jenkins.war
 .jenkins/
-test-results/
+test-results/.vscode/
