@@ -8,13 +8,13 @@ pipeline {
     parameters {
         booleanParam(name: 'ROLLBACK', defaultValue: false, description: 'Rollback to previous deployment?')
         string(name: 'ROLLBACK_TAG', defaultValue: '', description: 'Specific tag to rollback to (leave empty for previous)')
-        string(name: 'BRANCH', defaultValue: '*/master', description: 'branch name to be used for building. Default is master')
+        string(name: 'BRANCH', defaultValue: '*/main', description: 'branch name to be used for building. Default is main')
     }
 
     environment {
         APP_NAME = 'jenkins-cicd-app'
         PYTHON_VERSION = '3.11'
-        DOCKER_IMAGE = 'sushilkumarsb/jenkins-cicd-app'
+        DOCKER_IMAGE = 'javeed-khan/jenkins-cicd-app'
         DOCKER_TAG = "${BUILD_NUMBER}"
         EC2_HOST = '44.210.20.212'
         DEPLOYMENT_STATE_FILE = '.deployment_state'
@@ -293,7 +293,6 @@ BUILD_NUMBER=${BUILD_NUMBER}
                 echo "⏱️  Total Pipeline Duration: ${pipelineDuration} seconds"
                 echo "🐳 Docker Image: ${DOCKER_IMAGE}:${DOCKER_TAG}"
                 echo "✅ Deployment Status: SUCCESS"
-                echo "🌐 Application URL: https://sushilkumarsb.xyz/app/"
                 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
                 
                 // Archive deployment state
