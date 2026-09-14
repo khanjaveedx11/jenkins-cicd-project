@@ -1,0 +1,59 @@
+"""
+Sample Python Flask Application
+"""
+from flask import Flask, jsonify, request
+import os
+import logging
+
+app = Flask(__name__)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+@app.route('/', strict_slashes=False)
+def home():
+    """Home endpoint"""
+    return jsonify({
+        'message': 'Welcome to Jenkins CI/CD Automation Demo',
+        'status': 'running',
+        'version': '1.0.0'
+    })
+
+@app.route('/health', strict_slashes=False)
+def health():
+    """Health check endpoint - fails in production if BREAK_HEALTH is set"""
+    # Break health check in production to test rollback mechanism
+    break_health = os.getenv('BREAK_HEALTH', 'false')
+    logger.info(f"Health check called. BREAK_HEALTH={break_health}")
+    
+    if break_health.lower() in ['true', '1', 'yes']:
+        logger.warning("Health check FAILING due to BREAK_HEALTH flag")
+        return jsonify({'status': 'degraded', 'error': 'Simulated failure for rollback test'}), 503
+    
+    return jsonify({'status': 'ok'}), 200
+
+@app.route('/version', strict_slashes=False)
+def version():
+    """Version endpoint"""
+    return jsonify({
+        'version': '1.0.0'
+    })
+
+@app.route('/deploy', methods=['POST'], strict_slashes=False)
+def deploy():
+    """Deploy endpoint"""
+    logger.info("Deployment triggered")
+    return jsonify({
+        'status': 'success'
+    })
+
+
+def add_numbers(a, b):
+    """Simple function to demonstrate testing"""
+    return a + b
+
+if __name__ == '__main__':
+    port = int(os.getenv('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
+
